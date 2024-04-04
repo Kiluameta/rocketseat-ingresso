@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, Image, StatusBar } from 'react-native'
+import { View, Image, StatusBar, Alert } from 'react-native'
 import { FontAwesome6, MaterialIcons } from '@expo/vector-icons'
 import { Link, router } from 'expo-router'
 
@@ -7,6 +7,8 @@ import { colors } from '@/styles/colors'
 
 import { Input } from '@/components/input'
 import { Button } from '@/components/button'
+import { RegisterSubscription } from '@/server/api'
+import axios from 'axios'
 
 export default function Register(){
 
@@ -14,6 +16,7 @@ export default function Register(){
 
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
+    const [loading, setLoading] = useState(false)
 
     function checkName(e: string) {
         setName(e)
@@ -33,8 +36,29 @@ export default function Register(){
             setBtnState(false)
     }
 
-    function handleRegister() {
-        router.push('/ticket')
+    async function handleRegister() {
+        try {
+            setLoading(true)
+
+            const response = await RegisterSubscription(name, email)
+
+            if (response.data.attendeeId)
+                Alert.alert('Inscrição', 'Inscrição realizada com sucesso!', [
+                    { text: 'OK', onPress: () => router.push('/ticket')}
+                ])
+            
+        } catch (e) {
+
+            if (axios?.isAxiosError(e)){
+                if (String(e.response?.data?.message).includes('already registered')){
+                    return Alert.alert('Inscrição', 'Este e-mail já está cadastrado!')
+                }
+            }
+
+            Alert.alert('Atenção!', 'Não foi possível fazer a inscrição')
+        } finally {
+            setLoading(false)
+        }
     }
 
     return(
@@ -77,6 +101,7 @@ export default function Register(){
                     title='Acessar Credencial'
                     disabled={btnState}
                     onPress={handleRegister} 
+                    isLoading={loading}
                 />
 
                 <Link 
