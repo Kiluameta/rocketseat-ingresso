@@ -1,7 +1,11 @@
 import { useState } from 'react'
 import { View, Image, StatusBar, Alert } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { Link } from 'expo-router'
+import { Link, router, Redirect } from 'expo-router'
+import axios from 'axios'
+
+import { ConsultSubscription } from '@/server/api'
+import { useBadgeStore } from '@/store/badge-store'
 
 import { colors } from '@/styles/colors'
 
@@ -12,8 +16,29 @@ export default function Home(){
 
     const [code, setCode] = useState('')
     const [btnState, setBtnState] = useState(true)
+    const [loading, setLoading] = useState(false)
 
-    function handleAccessCredential() {
+    const badgeStore = useBadgeStore()
+
+    async function handleAccessCredential() {
+        try {
+            setLoading(true)
+
+            const response = await ConsultSubscription(code)
+
+            badgeStore.save(response.data.badge)
+
+            // if (response.data.badge)
+                Alert.alert('Inscrição', 'Inscrição realizada com sucesso!', [
+                    { text: 'OK', onPress: () => router.push('/ticket')}
+                ])
+            
+        } catch (e) {
+
+            setLoading(false)
+
+            Alert.alert('Atenção!', 'Ingresso não encontrado!')
+        }
     }
 
     function checkCode(e: string) {
@@ -23,6 +48,10 @@ export default function Home(){
             setBtnState(true)
         else
             setBtnState(false)
+    }
+
+    if (badgeStore.data?.checkInURL){
+        return <Redirect href='/ticket' />
     }
 
     return(
@@ -51,6 +80,7 @@ export default function Home(){
                     title='Acessar Credencial'
                     disabled={btnState}
                     onPress={() => handleAccessCredential()}
+                    isLoading={loading}
                 />
 
                 <Link 

@@ -2,13 +2,15 @@ import { useState } from 'react'
 import { View, Image, StatusBar, Alert } from 'react-native'
 import { FontAwesome6, MaterialIcons } from '@expo/vector-icons'
 import { Link, router } from 'expo-router'
+import axios from 'axios'
+
+import { ConsultSubscription, RegisterSubscription } from '@/server/api'
+import { useBadgeStore } from '@/store/badge-store'
 
 import { colors } from '@/styles/colors'
 
 import { Input } from '@/components/input'
 import { Button } from '@/components/button'
-import { RegisterSubscription } from '@/server/api'
-import axios from 'axios'
 
 export default function Register(){
 
@@ -17,6 +19,8 @@ export default function Register(){
     const [name, setName] = useState('')
     const [email, setEmail] = useState('')
     const [loading, setLoading] = useState(false)
+
+    const badgeStore = useBadgeStore()
 
     function checkName(e: string) {
         setName(e)
@@ -42,13 +46,19 @@ export default function Register(){
 
             const response = await RegisterSubscription(name, email)
 
-            if (response.data.attendeeId)
+            if (response.data.attendeeId){
+                const badgeResponse = await ConsultSubscription(response.data.attendeeId)
+
+                badgeStore.save(badgeResponse.data.badge)
+
                 Alert.alert('Inscrição', 'Inscrição realizada com sucesso!', [
                     { text: 'OK', onPress: () => router.push('/ticket')}
                 ])
+            }
             
         } catch (e) {
 
+            setLoading(false)
             if (axios?.isAxiosError(e)){
                 if (String(e.response?.data?.message).includes('already registered')){
                     return Alert.alert('Inscrição', 'Este e-mail já está cadastrado!')
@@ -56,8 +66,6 @@ export default function Register(){
             }
 
             Alert.alert('Atenção!', 'Não foi possível fazer a inscrição')
-        } finally {
-            setLoading(false)
         }
     }
 
