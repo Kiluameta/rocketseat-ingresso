@@ -129,13 +129,13 @@ export default function Ticket() {
                 statusBarTranslucent
                 animationType="slide"
             >
-                <View className="w-full bg-green-500 items-center justify-center">
+                <View className="w-full h-full bg-green-500 items-center justify-center">
                     <QRCode value="teste" size={300} />
                     <TouchableOpacity 
                         activeOpacity={0.7}
                         onPress={() => setShowQRCode(false)}
                     >
-                        <Text className="font-bold text-orange-500 text-sm text-center mt10">
+                        <Text className="font-bold text-orange-500 text-sm text-center mt-10">
                             Fechar QRCode
                         </Text>
                     </TouchableOpacity>
