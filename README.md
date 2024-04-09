@@ -1,7 +1,7 @@
 
-# Ingresso - App
+# Rocketseat-Ingresso - App
 
-Desenvolvido em React Native com Expo, destinado a realizar cadastro em eventos. 
+Desenvolvido em React Native com Expo, destinado a realizar cadastro em eventos. Um novo aprendizado pela Rocketseat 
 
 ![Imagem do WhatsApp de 2024-04-09 à(s) 07 14 24_acea05ac](https://github.com/Kiluameta/ingresso/assets/44100494/9e6d6bc0-f24c-4b71-908e-e1cb7bcefe43)
 ![Imagem do WhatsApp de 2024-04-09 à(s) 07 14 23_ae4bdcc9](https://github.com/Kiluameta/ingresso/assets/44100494/8efe4b9f-c88a-4489-a179-4c658eb8b9fb)
