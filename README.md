@@ -28,10 +28,10 @@ Para iniciar a integração com o projeto, é recomendável realizar o clone do 
 
 ```bash
 # Clone o repositório
-$ git clone https://github.com/Kiluameta/ingresso.git
+$ git clone https://github.com/Kiluameta/rocketseat-ingresso.git
 
 # Acesso
-$ cd endor-app
+$ cd rocketseat-ingresso
 
 # Instalando dependencias (confira na documentação de cada lib)
 $ yarn
